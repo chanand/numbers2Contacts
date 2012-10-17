@@ -1,0 +1,16 @@
+lib-cov
+*.seed
+*.log
+*.csv
+*.dat
+*.out
+*.pid
+*.gz
+*.yaml
+
+pids
+logs
+results
+
+projectFilesBackup
+.idea

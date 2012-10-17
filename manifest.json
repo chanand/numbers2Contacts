@@ -1,0 +1,22 @@
+{
+    "name": "Golan Calls",
+    "version": "0.1",
+    "manifest_version": 2,
+    "description": "Replaces phone numbers with names in 'Golan Telecom' calling details page",
+    "browser_action": {
+        "default_icon": "images/contacts.png"
+    },
+    "icons": {
+        "128": "images/contacts.png"
+    },
+    "background": {
+        "page": "background.html"
+    },
+    "content_scripts": [{
+        "matches": ["https://www.golantelecom.co.il/*"],
+        "js": ["js/content.js"]
+    }],
+    "permissions": [
+        "tabs", "https://www.golantelecom.co.il/*"
+    ]
+}
