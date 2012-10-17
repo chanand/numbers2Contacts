@@ -8,9 +8,11 @@ chrome.extension.onConnect.addListener(function(port) {
             var row = rows[i];
 
             var phoneNumberEl = row.getElementsByTagName('td')[4],
-                phoneNumber = phoneNumberEl.innerText.replace(/[-\.]/g, '').replace('+972', '0');
+                phoneNumber;
 
             if (phoneNumberEl.innerText) {
+
+                phoneNumber = phoneNumberEl.innerText.replace(/[-\.]/g, '').replace('+972', '0')
 
                 if (phones[phoneNumber]) {
                     phoneNumberEl.innerText = phones[phoneNumber];
@@ -21,5 +23,7 @@ chrome.extension.onConnect.addListener(function(port) {
 
 
     });
+
+    port.postMessage('phones');
 
 });

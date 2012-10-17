@@ -12,11 +12,17 @@
     "background": {
         "page": "background.html"
     },
-    "content_scripts": [{
-        "matches": ["https://www.golantelecom.co.il/*"],
-        "js": ["js/content.js"]
-    }],
+    "content_scripts": [
+        {
+            "matches": ["https://www.golantelecom.co.il/*"],
+            "js": ["js/content.js"]
+        }
+    ],
     "permissions": [
-        "tabs", "https://www.golantelecom.co.il/*"
+        "tabs",
+        "https://www.golantelecom.co.il/*",
+        "https://www.google.com/accounts/*",
+        "https://www.google.com/m8/feeds/*"
+
     ]
 }

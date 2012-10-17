@@ -39,7 +39,6 @@ function onAuthorized() {
     oauth.sendSignedRequest(url, callback, request);
 }
 
-
 chrome.browserAction.onClicked.addListener(function (tab) {
 
     var port = chrome.tabs.connect(tab.id);
