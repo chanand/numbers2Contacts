@@ -10,7 +10,7 @@ var oauth = ChromeExOAuth.initBackgroundPage({
     'app_name': 'Golan Calls'
 });
 
-function callback(resp, xhr) {
+var callback = function (resp, xhr) {
     var response = JSON.parse(resp),
         feed = response.feed;
 
@@ -23,10 +23,10 @@ function callback(resp, xhr) {
         }
     });
 
-}
+};
 
 
-function onAuthorized() {
+var onAuthorized = function () {
     var url = 'https://www.google.com/m8/feeds/contacts/default/full';
     var request = {
         'method': 'GET',
@@ -37,14 +37,51 @@ function onAuthorized() {
     };
 
     oauth.sendSignedRequest(url, callback, request);
-}
+};
+
+
+var queryTab = function () {
+    chrome.tabs.query({active: true, windowId: chrome.windows.WINDOW_ID_CURRENT}, checkTabUrl);
+};
+
+var checkTabUrl = function (tabs) {
+    var tab = tabs[0];
+
+    if (tab.url.indexOf('https://www.golantelecom.co.il/web/account_billing_calls.php') === 0){
+        var port = chrome.tabs.connect(tab.id);
+        port.onMessage.addListener(function () {
+            port.postMessage(phones);
+        });
+    }
+
+};
+
+chrome.tabs.onUpdated.addListener(function () {
+    queryTab();
+});
+
+
+chrome.tabs.onHighlighted.addListener(function () {
+    queryTab();
+});
+
+chrome.tabs.onActivated.addListener(function () {
+    queryTab();
+});
+
+chrome.windows.onFocusChanged.addListener(function () {
+    queryTab();
+});
+
+queryTab();
+
 
 chrome.browserAction.onClicked.addListener(function (tab) {
 
-    var port = chrome.tabs.connect(tab.id);
+    /*var port = chrome.tabs.connect(tab.id);
     port.onMessage.addListener(function () {
         port.postMessage(phones);
-    });
+    });*/
 
 });
 
