@@ -1,6 +1,6 @@
 {
     "name": "Golan Calls",
-    "version": "0.2",
+    "version": "0.3",
     "manifest_version": 2,
     "description": "Replaces phone numbers with names in 'Golan Telecom' calling details page",
     "icons": {
