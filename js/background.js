@@ -1,4 +1,10 @@
-var phones = {};
+var contacts = {},
+    pages = {
+        'www.golantelecom.co.il/web/account_billing_calls.php': {
+            parent: 'datatable x-maxed',
+            selector: 'tr td:nth-of-type(5)'
+        }
+    };
 
 var oauth = ChromeExOAuth.initBackgroundPage({
     'request_url': 'https://www.google.com/accounts/OAuthGetRequestToken',
@@ -18,7 +24,7 @@ var callback = function (resp) {
         if (ele.gd$phoneNumber && ele.gd$phoneNumber.length) {
             ele.gd$phoneNumber.forEach(function (phone) {
                 var number = phone.$t.replace(/[-\.]/g, '').replace('+972', '0');
-                phones[number] = ele.title.$t;
+                contacts[number] = ele.title.$t;
             });
         }
     });
@@ -43,12 +49,20 @@ var queryTab = function () {
 };
 
 var checkTabUrl = function (tabs) {
-    var tab = tabs[0];
+    var tab = tabs[0],
+        reg = /^.*:\/\/(.*)\?/g,
+        url = reg.exec(tab.url);
 
-    if (tab.url.indexOf('https://www.golantelecom.co.il/web/account_billing_calls.php') === 0) {
+    url = url && url.length && (url = url[1]);
+
+    if (url && pages[url]) {
         var port = chrome.tabs.connect(tab.id);
+
         port.onMessage.addListener(function () {
-            port.postMessage(phones);
+            port.postMessage({
+                contacts: contacts,
+                settings: pages[url]
+            });
         });
     }
 

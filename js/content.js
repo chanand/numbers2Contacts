@@ -1,35 +1,34 @@
 var ATTR_SAVE_NAME = 'data-replacedNumbers';
 
 chrome.extension.onConnect.addListener(function (port) {
-    port.onMessage.addListener(function (phones) {
+    port.onMessage.addListener(function (config) {
 
-        var table = document.getElementsByClassName('datatable x-maxed').item(),
-            rows = table.getElementsByTagName('tr');
+        var contacts = config.contacts;
 
-        if (table.getAttribute(ATTR_SAVE_NAME)) {
+        if (document.body.getAttribute(ATTR_SAVE_NAME)) {
             return;
         }
 
-        for (var i = 2; i < rows.length; i++) {
-            var row = rows[i];
+        var parent = 'datatable x-maxed',
+            selector = 'tr td:nth-of-type(5)',
+            elements = document.querySelectorAll(selector, parent);
 
-            var phoneNumberEl = row.getElementsByTagName('td')[4],
+        for (var i = 0; i < elements.length; i++) {
+            var phoneNumberEl = elements[i],
                 phoneNumber;
 
             if (phoneNumberEl.innerText) {
 
                 phoneNumber = phoneNumberEl.innerText.replace(/[-\.]/g, '').replace('+972', '0')
 
-                if (phones[phoneNumber]) {
-                    phoneNumberEl.innerHTML = '<abbr title="' + phoneNumberEl.innerText + '">' + phones[phoneNumber] + '</abbr>';
+                if (contacts[phoneNumber]) {
+                    phoneNumberEl.innerHTML = '<abbr title="' + phoneNumberEl.innerText + '">' + contacts[phoneNumber] + '</abbr>';
                 }
             }
-
         }
 
-        table.setAttribute(ATTR_SAVE_NAME, true);
+        document.body.setAttribute(ATTR_SAVE_NAME, true);
     });
 
-    port.postMessage('phones');
-
+    port.postMessage('getConfig');
 });
